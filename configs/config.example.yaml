@@ -1,0 +1,16 @@
+
+
+listen_addr: ":8080"
+
+routes:
+  - path: /hooks/github
+    provider: github
+    secret: "change-me"
+    targets:
+      - "http://localhost:9000/ingest"
+
+  - path: /hooks/gitlab
+    provider: gitlab
+    secret: "change-me"
+    targets:
+      - "http://localhost:9000/ingest"
