@@ -1,0 +1,72 @@
+WireHook
+========
+
+WireHook is a small webhook relax recieving webhooks from
+Git hosting providers, verifies their signatures, and forwards the payload
+to one or more HTTP targets of your choosing.
+
+Supported providers
+-------------------
+
+  - GitHub (github)
+  - GitLab (gitlab)
+
+Provider registry is in internal/provider/provider.go.
+Implementing Provider interface: Verify checks the request against
+the route's secret, and Parse turns the request into an Event.
+
+Building
+--------
+
+WireHook requires Go 1.26 or later.
+
+    go build -o wirehook ./cmd/wirehook
+
+Configuration
+-------------
+
+WireHook looks for configs/config.yaml; set WIREHOOK_CONFIG environment variable to use another path. A
+starting point is provided in configs/config.example.yaml:
+
+    listen_addr: ":8080"
+
+    routes:
+      - path: /hooks/github
+        provider: github
+        secret: "change-me"
+        targets:
+          - "http://localhost:9000/ingest"
+
+listen_addr defaults to :8080 when skipped. Each route has the
+following fields:
+
+  path      URL path WireHook listens on for this route.
+  provider  Provider that signs the webhooks.
+  secret    Shared secret to verify incoming requests.
+  targets   URL list of verified payload it's forwarded to.
+
+Running
+-------
+
+    cp configs/config.example.yaml configs/config.yaml
+    ./wirehook
+
+Point your provider's webhook settings at http://<host>:8080/<path> and
+use the same secret as in the route.
+
+How?
+----
+
+For each incoming request WireHook:
+
+  1. Reads request body.
+  2. Verifies signature with the route's provider and secret.
+  3. Parses the event.
+  4. POSTs the payload as application/json to every target, logging
+     (but otherwise ignoring) targets that fail.
+  5. Responds with 202.
+
+Licensing
+---------
+
+WireHook is licensed under the MPL-2.0: https://github.com/Orsacle/WireHook/blob/main/LICENSE
