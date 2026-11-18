@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/Orsacle/WireHook/internal/config"
-	"github.com/Orsacle/WireHook/internal/router"
+	"github.com/Orsacle/wirehook/internal/config"
+	"github.com/Orsacle/wirehook/internal/router"
 )
 
 func main() {

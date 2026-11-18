@@ -3,8 +3,8 @@ package router
 import (
 	"net/http"
 
-	"github.com/Orsacle/WireHook/internal/config"
-	"github.com/Orsacle/WireHook/internal/webhook"
+	"github.com/Orsacle/wirehook/internal/config"
+	"github.com/Orsacle/wirehook/internal/webhook"
 )
 
 func New(cfg *config.Config) *http.ServeMux {
